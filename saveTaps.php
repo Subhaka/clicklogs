@@ -20,19 +20,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $apiKey = 'AIzaSyCbY3yYsBnIDZ3ZWv1aSmOKUFW1SZQmAUs';
 
     foreach ($tapsArray as $tap) {
-        $record = [
-            'fields' => [
-                'session_id' => ['stringValue' => $sessionId],
-                'device' => ['stringValue' => $devicePlatform],
-                'sequence' => ['integerValue' => $tap['tapSequenceNumber']],
-                'start' => ['integerValue' => $tap['startTimestamp']],
-                'end' => ['integerValue' => $tap['endTimestamp']],
-                'duration' => ['integerValue' => $tap['endTimestamp'] - $tap['startTimestamp']],
-                'interface' => ['stringValue' => $tap['interface']],
-                'interface_seq' => ['integerValue' => $tap['interfaceSequence']],
-                'timestamp' => ['integerValue' => time()]
-            ]
-        ];
+    $record = [
+        'fields' => [
+            'session_id' => ['stringValue' => (string)$sessionId],
+            'device' => ['stringValue' => (string)$devicePlatform],
+            'sequence' => ['integerValue' => (string)$tap['tapSequenceNumber']],
+            'start' => ['integerValue' => (string)$tap['startTimestamp']],
+            'end' => ['integerValue' => (string)$tap['endTimestamp']],
+            'duration' => ['integerValue' => (string)($tap['endTimestamp'] - $tap['startTimestamp'])],
+            'interface' => ['stringValue' => (string)$tap['interface']],
+            'interface_seq' => ['integerValue' => (string)$tap['interfaceSequence']],
+            'timestamp' => ['integerValue' => (string)time()]
+        ]
+    ];
+   
+}
 
         $ch = curl_init($url . "?key=$apiKey");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
