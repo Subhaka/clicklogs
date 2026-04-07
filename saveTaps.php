@@ -19,22 +19,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $url = "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents/$collection";
     $apiKey = 'AIzaSyCbY3yYsBnIDZ3ZWv1aSmOKUFW1SZQmAUs';
 
-    foreach ($tapsArray as $tap) {
-    $record = [
-        'fields' => [
-            'session_id' => ['stringValue' => (string)$sessionId],
-            'device' => ['stringValue' => (string)$devicePlatform],
-            'sequence' => ['integerValue' => (string)$tap['tapSequenceNumber']],
-            'start' => ['integerValue' => (string)$tap['startTimestamp']],
-            'end' => ['integerValue' => (string)$tap['endTimestamp']],
-            'duration' => ['integerValue' => (string)($tap['endTimestamp'] - $tap['startTimestamp'])],
-            'interface' => ['stringValue' => (string)$tap['interface']],
-            'interface_seq' => ['integerValue' => (string)$tap['interfaceSequence']],
-            'timestamp' => ['integerValue' => (string)time()]
-        ]
-    ];
-   
-}
+   foreach ($tapsArray as $tap) {
+        $record = [
+            'fields' => [
+                'session_id' => ['stringValue' => (string)$sessionId],
+                'device' => ['stringValue' => (string)$devicePlatform],
+                'sequence' => ['integerValue' => (string)$tap['tapSequenceNumber']],
+                'start' => ['integerValue' => (string)$tap['startTimestamp']],
+                'end' => ['integerValue' => (string)$tap['endTimestamp']],
+                'duration' => ['integerValue' => (string)($tap['endTimestamp'] - $tap['startTimestamp'])],
+                'interface' => ['stringValue' => (string)$tap['interface']],
+                'interface_seq' => ['integerValue' => (string)$tap['interfaceSequence']],
+                'timestamp' => ['integerValue' => (string)time()]
+            ]
+        ];
 
         $ch = curl_init($url . "?key=$apiKey");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -43,14 +41,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($record));
 
         $response = curl_exec($ch);
-        if(curl_errno($ch)){
-            echo "Curl error: " . curl_error($ch);
-        } else {
-            echo "Firestore response: $response<br>";
-        }
         curl_close($ch);
-    }
+    } // This closes the foreach loop
 
+    echo "Data saved successfully"; 
+
+} else {
+    echo "Invalid request method";
+} // This closes the if($_SERVER['REQUEST_METHOD'] === 'POST')
+?>
     echo "Data sent successfully via REST API!";
 } else {
     echo "Invalid request method";
